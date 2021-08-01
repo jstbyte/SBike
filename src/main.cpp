@@ -14,11 +14,15 @@ char known_mac[] = "A8:7D:12:36:50:12";
 
 AsyncWebServer server(80);
 
+double time_stamp = 0;
+
 void setup()
 {
+  time_stamp = millis();
   // Kill Switch Pin Setup;
   pinMode(KEY_PIN, OUTPUT);
-  digitalWrite(KEY_PIN, LOW);
+  // digitalWrite(KEY_PIN, LOW);
+  digitalWrite(KEY_PIN, HIGH);
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(AP_NAME, AP_PASS);
@@ -26,6 +30,10 @@ void setup()
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(100);
+    if ((millis() - time_stamp) > (1000 * 10))
+    {
+      digitalWrite(KEY_PIN, LOW);
+    }
   }
 
   // Compare connetced AP MAC with predefined MAC;
@@ -47,7 +55,7 @@ void setup()
 void loop()
 {
   // Total 5 Minute Delay;
-  for (int i = 0; i < 5; i++)
+  for (int i = 0; i < 2; i++)
   {
     AsyncElegantOTA.loop();
     delay(60000);
